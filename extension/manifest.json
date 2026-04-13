@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "ReviewGuard – AI Fake Review Detector",
+  "version": "1.0.0",
+  "description": "Detects fake and suspicious product reviews using NLP + ML classification.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*.amazon.in/*",
+    "https://*.amazon.com/*",
+    "https://*.flipkart.com/*",
+    "https://*.meesho.com/*",
+    "https://*.myntra.com/*",
+    "https://*.snapdeal.com/*",
+    "http://localhost:5000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.amazon.in/*",
+        "https://*.amazon.com/*",
+        "https://*.flipkart.com/*",
+        "https://*.meesho.com/*",
+        "https://*.myntra.com/*",
+        "https://*.snapdeal.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReviewGuard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 360px;
+      min-height: 480px;
+      background: #0d0d0d;
+      color: #f0f0f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+      border-bottom: 1px solid #222;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-icon {
+      width: 28px; height: 28px;
+      background: #c6f135;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+    }
+    .logo-text {
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.3px;
+    }
+    .logo-text span { color: #c6f135; }
+
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #00e676;
+      box-shadow: 0 0 8px #00e676;
+    }
+    .status-dot.inactive { background: #888; box-shadow: none; }
+
+    /* ---- Stats row ---- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: #1a1a1a;
+      border-bottom: 1px solid #222;
+    }
+    .stat-card {
+      background: #111;
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .stat-num.suspicious { color: #ff4d4d; }
+    .stat-num.genuine    { color: #00e676; }
+    .stat-num.total      { color: #c6f135; }
+    .stat-label {
+      font-size: 10px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ---- Progress bar ---- */
+    .progress-wrap {
+      padding: 10px 14px 6px;
+      background: #0d0d0d;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    .progress-bar {
+      height: 4px;
+      background: #1a1a1a;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff4d4d, #ff8c00);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* ---- Section header ---- */
+    .section-hdr {
+      padding: 10px 14px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ---- Review list ---- */
+    .reviews-list {
+      max-height: 240px;
+      overflow-y: auto;
+      padding: 0 10px 10px;
+    }
+    .reviews-list::-webkit-scrollbar { width: 4px; }
+    .reviews-list::-webkit-scrollbar-track { background: #111; }
+    .reviews-list::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+    .review-item {
+      background: #141414;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 6px;
+      transition: border-color 0.2s;
+    }
+    .review-item:hover { border-color: #333; }
+    .review-item.suspicious { border-left: 3px solid #ff4d4d; }
+    .review-item.genuine    { border-left: 3px solid #00e676; }
+
+    .review-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .review-author {
+      font-weight: 600;
+      font-size: 12px;
+      color: #ccc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+    .review-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .review-badge.suspicious { background: #ff4d4d22; color: #ff4d4d; border: 1px solid #ff4d4d44; }
+    .review-badge.genuine    { background: #00e67622; color: #00e676; border: 1px solid #00e67644; }
+
+    .review-text {
+      font-size: 11px;
+      color: #777;
+      line-height: 1.5;
+      margin-bottom: 5px;
+    }
+
+    .review-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .flag-chip {
+      background: #ff4d4d11;
+      border: 1px solid #ff4d4d33;
+      color: #ff8888;
+      font-size: 9px;
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+
+    .confidence-bar-wrap {
+      margin-top: 5px;
+      height: 3px;
+      background: #1e1e1e;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .confidence-bar {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+    .confidence-bar.suspicious { background: linear-gradient(90deg, #ff4d4d, #ff8c00); }
+    .confidence-bar.genuine    { background: linear-gradient(90deg, #00e676, #00bcd4); }
+
+    /* ---- Empty state ---- */
+    .empty-state {
+      text-align: center;
+      padding: 30px 20px;
+      color: #444;
+    }
+    .empty-state .emoji { font-size: 32px; margin-bottom: 10px; }
+    .empty-state p { font-size: 12px; line-height: 1.5; }
+
+    /* ---- Footer buttons ---- */
+    .footer {
+      border-top: 1px solid #1a1a1a;
+      padding: 10px 12px;
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      text-align: center;
+    }
+    .btn:hover { opacity: 0.8; }
+    .btn-primary {
+      background: #c6f135;
+      color: #000;
+    }
+    .btn-secondary {
+      background: #1a1a1a;
+      color: #999;
+      border: 1px solid #333;
+    }
+
+    /* ---- Alert banner ---- */
+    .alert-banner {
+      margin: 8px 10px 0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      display: none;
+    }
+    .alert-banner.show { display: flex; align-items: center; gap: 8px; }
+    .alert-banner.warning { background: #ff4d4d18; border: 1px solid #ff4d4d44; color: #ff8888; }
+    .alert-banner.success { background: #00e67618; border: 1px solid #00e67644; color: #66e676; }
+    .alert-banner.info    { background: #c6f13518; border: 1px solid #c6f13544; color: #c6f135; }
+
+    /* ---- Method indicator ---- */
+    .method-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 10px; font-size: 10px;
+      background: #1a1a1a; color: #666; margin: 6px 14px 0;
+    }
+    .method-tag.ml   { background: #c6f13522; color: #c6f135; }
+    .method-tag.heur { background: #888822; color: #cccc00; }
+
+    .spinning { animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">🛡️</div>
+      <div class="logo-text">Review<span>Guard</span></div>
+    </div>
+    <div class="status-dot inactive" id="statusDot" title="Extension status"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num total" id="statTotal">0</div>
+      <div class="stat-label">Reviews</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num suspicious" id="statSuspicious">0</div>
+      <div class="stat-label">Suspicious</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num genuine" id="statGenuine">0</div>
+      <div class="stat-label">Genuine</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressLabel">Waiting for review page…</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- Alert banner -->
+  <div class="alert-banner" id="alertBanner"></div>
+
+  <!-- Method tag -->
+  <div class="method-tag" id="methodTag" style="display:none"></div>
+
+  <!-- Reviews list -->
+  <div class="section-hdr" id="listHdr" style="display:none">Classified Reviews</div>
+  <div class="reviews-list" id="reviewsList">
+    <div class="empty-state">
+      <div class="emoji">🔍</div>
+      <p>Navigate to a product page on Amazon, Flipkart, Meesho, or Myntra to start detecting fake reviews.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <button class="btn btn-primary" id="btnRescan">🔄 Re-scan</button>
+    <button class="btn btn-secondary" id="btnSettings">⚙️ Settings</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
