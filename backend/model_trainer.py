@@ -4,7 +4,7 @@ Trains a TF-IDF + Classifier pipeline on labeled review data.
 Run this once before starting the API server: python model_trainer.py
 """
 
-import pickle, os, json
+import pickle, os, json, csv
 import numpy as np
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -17,6 +17,26 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 from sklearn.preprocessing import LabelEncoder
 from sklearn.calibration import CalibratedClassifierCV
 import re
+
+
+def load_csv_data(csv_path):
+    """Load training data from CSV file."""
+    texts, labels = [], []
+    if not os.path.exists(csv_path):
+        print(f"CSV file not found: {csv_path}")
+        return texts, labels
+    
+    with open(csv_path, "r", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            text = row.get("text_", "").strip()
+            label = row.get("label", "").strip()
+            if text and label and label in ("0", "1"):
+                texts.append(text)
+                labels.append(int(label))
+    
+    print(f"Loaded {len(texts)} reviews from CSV ({sum(labels)} fake, {len(labels)-sum(labels)} genuine)")
+    return texts, labels
 
 # ----------------------------------------------------------------
 # Training data  (0 = Genuine, 1 = Suspicious/Fake)
@@ -104,8 +124,16 @@ def build_pipeline():
 
 
 def train_and_save():
-    X = TEXTS
-    y = LABELS
+    csv_path = os.path.join(os.path.dirname(__file__), "fake reviews dataset.csv")
+    X_csv, y_csv = load_csv_data(csv_path)
+    
+    if X_csv:
+        X, y = X_csv, y_csv
+        print(f"Using {len(X)} samples from CSV dataset")
+    else:
+        X = TEXTS
+        y = LABELS
+        print(f"Using {len(X)} samples from built-in training data")
 
     # Split for evaluation
     X_train, X_test, y_train, y_test = train_test_split(
