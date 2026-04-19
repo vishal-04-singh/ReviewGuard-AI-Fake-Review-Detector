@@ -62,7 +62,7 @@ cd backend
 # Install dependencies
 pip install -r requirements.txt
 
-# Train the ML model (creates model.pkl)
+# Train the ML model using the fake reviews dataset
 python model_trainer.py
 
 # Start the API server
@@ -70,6 +70,8 @@ python app.py
 ```
 
 The server runs on **http://localhost:5000**
+
+**Training Data:** The model is trained on `fake reviews dataset.csv` (~40K labeled reviews from Amazon)
 
 ### 3. Use ReviewGuard
 
@@ -85,9 +87,11 @@ The server runs on **http://localhost:5000**
 
 | Component | Detail |
 |---|---|
+| Training Data | 40,427 labeled reviews (fake reviews dataset.csv) |
 | Feature Extraction | TF-IDF (unigrams, bigrams, trigrams) |
 | Max Features | 8,000 vocabulary tokens |
 | Algorithm | LinearSVC (Calibrated for probabilities) |
+| Test Accuracy | ~94.8% |
 | Problem Type | Binary Classification (0=Genuine, 1=Suspicious) |
 | Offline Fallback | Heuristic rule engine (no server required) |
 
@@ -179,6 +183,7 @@ reviewguard/
     ├── model_trainer.py    ← ML training pipeline
     ├── model.pkl           ← Trained model (generated)
     ├── model_meta.json     ← Model metadata (generated)
+    ├── fake reviews dataset.csv  ← Training data (~40K reviews)
     └── requirements.txt
 ```
 
