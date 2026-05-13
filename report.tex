@@ -1,0 +1,1611 @@
+%==========================================================
+%  ReviewGuard – AI Fake Review Detector
+%  Complete Software Engineering Project Report
+%  Lab 1 to Lab 10  |  Simple English Version
+%==========================================================
+
+\documentclass[10pt, a4paper]{report}
+
+\usepackage[a4paper, left=0.7in, right=0.7in, top=1in, bottom=0.7in]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{mdframed}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{parskip}
+
+%-- Colors ------------------------------------------------
+\definecolor{myblue}{HTML}{1A56DB}
+\definecolor{mydark}{HTML}{1E429F}
+\definecolor{myred}{HTML}{E02424}
+\definecolor{mygray}{HTML}{374151}
+\definecolor{codegreen}{HTML}{166534}
+\definecolor{codeback}{HTML}{F0FDF4}
+\definecolor{codegray}{HTML}{6B7280}
+
+%-- Header and footer -------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{myblue}{\textbf{ReviewGuard}} -- AI Fake Review Detector}
+\fancyhead[R]{\small\leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%-- Chapter heading style ---------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{myblue}}
+  {Lab \thechapter}{10pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-10pt}{20pt}
+
+\titleformat{\section}{\large\bfseries\color{mydark}}{{\thesection}}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{mygray}}{{\thesubsection}}{1em}{}
+
+%-- Blue info box -----------------------------------------
+\newmdenv[
+  linecolor=myblue,
+  backgroundcolor=myblue!5,
+  linewidth=1.5pt,
+  roundcorner=4pt,
+  innertopmargin=8pt,
+  innerbottommargin=8pt
+]{bluebox}
+
+%-- Links -------------------------------------------------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=myblue,
+    urlcolor=mydark
+}
+
+%-- Image placeholder (add your own image here) -----------
+\newcommand{\imagebox}[2]{%
+  \begin{figure}[H]
+    \centering
+    \fbox{\begin{minipage}{0.85\textwidth}
+      \centering\vspace{1.5cm}
+      \textcolor{mygray}{\Large [ ADD IMAGE HERE ]}\\[6pt]
+      \textit{#1}
+      \vspace{1.5cm}
+    \end{minipage}}
+    \caption{#2}
+  \end{figure}
+}
+
+%==========================================================
+%  TITLE PAGE
+%==========================================================
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{1cm}
+
+  {\Huge\bfseries\color{myblue} ReviewGuard}\\[6pt]
+  {\Large\color{mygray} AI Fake Review Detector}\\[4pt]
+  {\normalsize A Chrome Browser Tool that uses AI to find Fake Reviews}
+
+  \vspace{0.5cm}
+  \rule{\textwidth}{1.5pt}
+  \vspace{0.3cm}
+
+  {\LARGE\bfseries Software Engineering Project Report}\\[6pt]
+  {\large All Labs -- Lab 1 to Lab 10}
+
+  \vspace{1cm}
+
+  \fbox{\begin{minipage}{0.7\textwidth}
+    \centering\vspace{2cm}
+    \textcolor{myblue}{\Huge\textbf{ReviewGuard}}\\[8pt]
+    \textcolor{mygray}{\large [ Add Your Project Logo Here ]}
+    \vspace{2cm}
+  \end{minipage}}
+
+  \vspace{1cm}
+
+  \textbf{Made By:}\\[6pt]
+  \begin{tabular}{ll}
+    Vishal Singh      & Enrollment: 590028030 \\
+    Vivek Rawat       & Enrollment: 590027033 \\
+    Ankit Kumar Singh & Enrollment: 590027049 \\
+  \end{tabular}
+
+  \vspace{0.8cm}
+  \textbf{Submitted To:}\\[4pt]
+  Department of Computer Science and Engineering\\
+  {[Write Your University / College Name Here]}
+
+  \vspace{0.8cm}
+  {\large Year: 2025--2026}\\[4pt]
+  {\normalsize Date: March 16, 2026}
+
+  \vspace{0.5cm}
+  \rule{\textwidth}{1.5pt}
+\end{titlepage}
+
+%==========================================================
+%  CERTIFICATE
+%==========================================================
+\newpage
+\thispagestyle{empty}
+\begin{center}
+  {\Large\bfseries\color{myblue} CERTIFICATE}
+\end{center}
+\vspace{1cm}
+
+This is to say that the project called \textbf{"ReviewGuard -- AI Fake Review Detector"} was made by \textbf{Vishal Singh}, \textbf{Vivek Rawat}, and \textbf{Ankit Kumar Singh}. They worked on this project themselves. This project was made as part of the Software Engineering Lab in the year 2025--2026.
+
+The work done by the students is good and we are happy with the results.
+
+\vspace{3cm}
+
+\begin{tabular}{p{0.45\textwidth}p{0.45\textwidth}}
+  \textbf{Teacher / Guide} & \textbf{Head of Department} \\[1.5cm]
+  Name: \hrulefill & Name: \hrulefill \\[0.5cm]
+  Sign: \hrulefill & Sign: \hrulefill \\[0.5cm]
+  Date: \hrulefill & Date: \hrulefill \\
+\end{tabular}
+
+\vspace{2cm}
+\begin{center}
+  {[ College Stamp / Seal ]}
+\end{center}
+
+%==========================================================
+%  DECLARATION
+%==========================================================
+\newpage
+\thispagestyle{empty}
+\begin{center}
+  {\Large\bfseries\color{myblue} DECLARATION}
+\end{center}
+\vspace{0.8cm}
+
+We, the students listed below, say that the project \textbf{"ReviewGuard -- AI Fake Review Detector"} was made by us. We confirm that:
+
+\begin{itemize}
+  \item We did this work ourselves. We did not copy from anyone else.
+  \item This project was not given to any other college or exam before.
+  \item We have mentioned all sources that helped us.
+\end{itemize}
+
+\vspace{2cm}
+
+\begin{tabular}{p{0.3\textwidth}p{0.3\textwidth}p{0.3\textwidth}}
+  \textbf{Vishal Singh} & \textbf{Vivek Rawat} & \textbf{Ankit Kumar Singh} \\
+  590028030 & 590027033 & 590027049 \\[1.5cm]
+  Sign: \underline{\hspace{2.5cm}} & Sign: \underline{\hspace{2.5cm}} & Sign: \underline{\hspace{2.5cm}} \\[0.5cm]
+  Date: \underline{\hspace{2.5cm}} & Date: \underline{\hspace{2.5cm}} & Date: \underline{\hspace{2.5cm}} \\
+\end{tabular}
+
+%==========================================================
+%  ABSTRACT  (Short Summary of the whole project)
+%==========================================================
+\newpage
+\begin{center}
+  {\Large\bfseries\color{myblue} ABSTRACT (Project Summary)}
+\end{center}
+\vspace{0.5cm}
+\onehalfspacing
+
+When people shop online, they read reviews to decide if a product is good or bad. But many reviews on shopping websites like Amazon are \textbf{fake}. Someone writes these fake reviews to either make a bad product look good, or to make a good product look bad. This is a big problem because it tricks buyers.
+
+\textbf{ReviewGuard} is a tool that solves this problem. It is a small program that you add to the Google Chrome browser (called a browser extension). When you visit a shopping website, ReviewGuard looks at all the reviews on that page. It checks each review using Artificial Intelligence (AI) and tells you if the review is \textbf{Real} or \textbf{Fake}.
+
+The system uses two AI methods to check reviews:
+\begin{itemize}
+  \item \textbf{TF-IDF} -- a way to understand which words are important in a review
+  \item \textbf{Machine Learning} -- the computer learns from thousands of examples of real and fake reviews, then uses what it learned to check new reviews
+\end{itemize}
+
+We trained this AI using a dataset of \textbf{40,427 reviews} -- half real and half fake. The AI correctly identified fake reviews with \textbf{91.2\% accuracy}.
+
+The project was built step by step using a method called Agile, which means we built a little bit, tested it, fixed problems, and then built more.
+
+\vspace{0.5cm}
+\textbf{Key Words:} Fake Review, AI, Machine Learning, Chrome Extension, Online Shopping, Review Checker.
+
+%==========================================================
+%  ACKNOWLEDGEMENT
+%==========================================================
+\newpage
+\begin{center}
+  {\Large\bfseries\color{myblue} ACKNOWLEDGEMENT}
+\end{center}
+\vspace{0.5cm}
+\onehalfspacing
+
+We want to say thank you to our teacher \textbf{[Teacher Name]} who helped and guided us throughout this project. Without their support and advice, we could not have finished this work.
+
+We also thank the \textbf{Head of the Department} and all other teachers for their help and support.
+
+We are thankful to \textbf{[College Name]} for giving us the computers, internet, and space needed to work on this project.
+
+Finally, we thank our families and friends for encouraging us every day.
+
+\vspace{1.5cm}
+\begin{flushright}
+  \textbf{Vishal Singh} \\ Vivek Rawat \\ Ankit Kumar Singh
+\end{flushright}
+
+%==========================================================
+%  TABLE OF CONTENTS
+%==========================================================
+\newpage
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+
+%==========================================================
+%  LAB 1 -- PROBLEM STATEMENT AND PROBLEM SCENARIO
+%==========================================================
+\chapter{Problem Statement and Problem Scenario}
+
+\section{What is the Problem?}
+
+Today, millions of people shop online. Websites like Amazon and Flipkart show product reviews written by customers. People read these reviews before buying anything. If a product has many good reviews, people think it is a good product and they buy it.
+
+But there is a big problem -- \textbf{many reviews are fake}. Some sellers pay people to write good reviews for their bad products. Some bad sellers also pay people to write bad reviews for their competitor's good products. This is called \textbf{fake review fraud}.
+
+\begin{bluebox}
+\textbf{Problem in Simple Words:}\\
+Many product reviews on shopping websites are fake. Real customers get cheated into buying bad products. Good sellers lose customers because of fake bad reviews. And shopping websites lose the trust of users. Checking these reviews by hand (by humans) is not possible because there are millions of reviews every day.
+\end{bluebox}
+
+\section{Problem Statement}
+
+Shopping websites have a serious problem with fake and made-up product reviews. These fake reviews cheat buyers, hurt honest sellers, and make the website less trustworthy. People who check reviews by hand cannot keep up because there are too many reviews. We need a smart, fast, and automatic system that can detect and mark fake reviews for users while they are shopping.
+
+\section{Problem Scenarios -- Real Life Examples}
+
+\subsection{Scenario 1: Buyer Gets Cheated}
+
+Priya wants to buy wireless headphones online. She sees a product with a 4.8 star rating and 500 reviews. Most reviews say "Amazing product! Must buy!" She buys it. But when it arrives, the quality is very poor. Later she finds out most of those reviews were fake -- written by paid people who never used the product.
+
+\textbf{Result:} Priya wasted her money because of fake reviews.
+
+\subsection{Scenario 2: Good Seller Loses Business}
+
+Ramesh sells handmade candles online and has a 4.5 star rating. Suddenly, in just one week, 50 bad reviews appear on his product. All of them say things like "Very bad quality" but none of them actually bought the product. A competitor paid someone to write those reviews to destroy Ramesh's business.
+
+\textbf{Result:} Ramesh loses sales because of fake bad reviews from a competitor.
+
+\subsection{Scenario 3: Paid Review Writers}
+
+A group of people gets paid by a seller to write 5-star reviews for a new product. They write very positive reviews with exaggerated words like "Best product in the whole world!" even though they never used it.
+
+\textbf{Result:} New customers see these reviews and buy the product, only to be disappointed.
+
+\section{Why is this a Big Problem?}
+
+\begin{table}[H]
+\centering
+\caption{Problems Caused by Fake Reviews}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Who is Affected} & \textbf{What Happens} \\
+\midrule
+Buyers / Customers & They are fooled into buying bad products and waste their money. \\
+Good Sellers & They lose sales because competitors post fake bad reviews on their products. \\
+Shopping Websites & People stop trusting the website when they find out reviews are fake. \\
+Society & Billions of rupees are lost every year because of fake review fraud. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Why Can't Humans Check Reviews?}
+
+\begin{itemize}
+  \item There are \textbf{millions} of new reviews posted every day on big websites.
+  \item Humans take too much time to check each review one by one.
+  \item Different humans give different results -- one person may think a review is fake, another may think it is real.
+  \item Fake reviews are designed to look real, so humans can be fooled.
+\end{itemize}
+
+That is why we need an \textbf{automatic AI system} that can check reviews quickly, correctly, and at a large scale.
+
+\section{Our Solution -- ReviewGuard}
+
+We built \textbf{ReviewGuard} -- a Chrome browser tool that:
+
+\begin{enumerate}
+  \item Reads all reviews on the current shopping page automatically.
+  \item Sends each review to our AI system to check it.
+  \item Shows a green badge on real reviews and a red badge on fake reviews.
+  \item Shows a summary at the top telling how many reviews on this page are real.
+\end{enumerate}
+
+\imagebox{Diagram showing how ReviewGuard works: User opens shopping page, extension reads reviews, sends to AI server, gets result (Real or Fake), shows badge on screen}{How ReviewGuard Works -- Overview Diagram}
+
+\section{What ReviewGuard Will and Will Not Do}
+
+\textbf{What it WILL do:}
+\begin{itemize}
+  \item Check text reviews using AI
+  \item Show green (Real) or red (Fake) badges on reviews
+  \item Give an overall score for the product's reviews
+  \item Let admins see reports of flagged reviews
+  \item Allow the AI to be retrained with new review data
+\end{itemize}
+
+\textbf{What it WILL NOT do (for now):}
+\begin{itemize}
+  \item Check reviews in languages other than English
+  \item Check photo or video reviews
+  \item Delete fake reviews (it only detects them)
+  \item Work on mobile phones or Firefox
+\end{itemize}
+
+%==========================================================
+%  LAB 2 -- REQUIREMENT ANALYSIS PART 1
+%==========================================================
+\chapter{Requirement Analysis -- Part One}
+
+\section{What is Requirement Analysis?}
+
+Before we start building any software, we need to first understand exactly:
+\begin{itemize}
+  \item \textbf{Who} will use the system?
+  \item \textbf{What} should the system do?
+  \item \textbf{How well} should it work?
+\end{itemize}
+
+This process is called \textbf{Requirement Analysis}. It makes sure everyone -- the team, the teachers, and the users -- agrees on what the project will do before we write any code.
+
+\section{Who Will Use ReviewGuard?}
+
+\subsection{Main Users}
+
+\begin{table}[H]
+\centering
+\caption{People Who Use ReviewGuard}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{User Type} & \textbf{Who are they?} & \textbf{What do they do?} \\
+\midrule
+Online Shoppers & Normal people who buy things online & Install the extension and see badges on reviews \\
+Admin / Moderator & Person who manages the system & Sees reports, checks flagged reviews, manages the AI \\
+Seller / Vendor & People who sell products online & They benefit because fake bad reviews get caught \\
+Developer & The technical person who built the system & Updates the AI, fixes bugs, manages the server \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Other Users}
+
+\begin{itemize}
+  \item \textbf{Government / Regulators:} They can use reports from our system as proof when investigating review fraud.
+  \item \textbf{Researchers:} People studying fake reviews can use our data.
+\end{itemize}
+
+\section{What Each Person Does in the System}
+
+\subsection{Shopper (Browser Extension User)}
+\begin{itemize}
+  \item Downloads and installs the ReviewGuard Chrome extension.
+  \item Opens any shopping website and browses normally.
+  \item Sees green and red badges on reviews without doing anything extra.
+  \item Can also press a button to report a review they think is fake.
+\end{itemize}
+
+\subsection{Admin / Moderator}
+\begin{itemize}
+  \item Logs in to the ReviewGuard admin website.
+  \item Looks at the list of reviews that the AI marked as fake.
+  \item Can change a label if the AI made a mistake.
+  \item Can start the AI retraining process with new data.
+  \item Downloads reports to show to others.
+\end{itemize}
+
+\subsection{Developer}
+\begin{itemize}
+  \item Keeps the server (backend) running and up to date.
+  \item Retrains the AI with new review data.
+  \item Fixes problems if something breaks.
+  \item Updates the Chrome extension when needed.
+\end{itemize}
+
+\subsection{Sellers (Indirect Users)}
+\begin{itemize}
+  \item Sellers do not directly open or use ReviewGuard.
+  \item They benefit because fake bad reviews on their products get detected and shown as suspicious to buyers.
+\end{itemize}
+
+\section{What the System Must Do -- Functional Requirements}
+
+These are the things the system \textbf{must} be able to do. Think of these like a checklist of features.
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements -- What the System Must Do}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Req. No.} & \textbf{Requirement} \\
+\midrule
+FR-01 & The system must find and read all review texts on the shopping page automatically. \\
+FR-02 & The system must send the review text to the AI server to be checked. \\
+FR-03 & The system must clean up the review text before checking (remove extra words, make lowercase, etc.). \\
+FR-04 & The system must convert the review text into numbers so the AI can understand it. \\
+FR-05 & The AI must classify each review as either \textbf{Real} or \textbf{Fake}. \\
+FR-06 & The system must send the result (Real or Fake + percentage) back to the Chrome extension. \\
+FR-07 & The extension must show a green badge for real reviews and a red badge for fake reviews on the page. \\
+FR-08 & The extension must show a summary box showing how many percent of reviews are real. \\
+FR-09 & There must be an admin website where the admin can see all flagged reviews and reports. \\
+FR-10 & The admin must be able to upload new review data to retrain the AI. \\
+FR-11 & All results must be saved in a database with the date and time. \\
+FR-12 & The shopper must be able to manually report a review as suspicious by clicking a button. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{How Well the System Should Work -- Non-Functional Requirements}
+
+These are not about what the system does, but about \textbf{how well} it does it. Think of them like quality standards.
+
+\begin{table}[H]
+\centering
+\caption{Non-Functional Requirements -- Quality Standards}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Req. No.} & \textbf{Type} & \textbf{Requirement} \\
+\midrule
+NFR-01 & Speed & The AI must give a result within 0.5 seconds for one review. \\
+NFR-02 & Speed & The badges must appear on the page within 2 seconds of it loading. \\
+NFR-03 & Load Capacity & The system must handle at least 200 people using it at the same time. \\
+NFR-04 & Accuracy & The AI must correctly identify at least 85\% of reviews. \\
+NFR-05 & Always Available & The system must be working 99.5\% of the time. \\
+NFR-06 & Security & All data sent between the extension and server must be protected (using HTTPS). \\
+NFR-07 & Easy to Use & Users must not need to do any setup -- just install and it works. \\
+NFR-08 & Easy to Update & When the AI is updated, users do not need to reinstall the extension. \\
+NFR-09 & Works on Many Browsers & Must work on Chrome, Edge, and Brave browsers. \\
+NFR-10 & Privacy & No full review text should be stored permanently -- only a scrambled version. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Who Has a Stake in This Project?}
+
+\imagebox{Stakeholder diagram showing all people connected to ReviewGuard: Shoppers, Sellers, Admins, E-commerce Websites, Developers, and Regulators all connected to the ReviewGuard system in the center}{ReviewGuard Stakeholder Diagram}
+
+\begin{table}[H]
+\centering
+\caption{Stakeholders and Their Interests}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{Person / Group} & \textbf{What They Want} & \textbf{How Much They Matter} \\
+\midrule
+Shoppers & Honest, correct information about products & Very Important -- main users \\
+Shopping Websites & Keep their website trustworthy & Very Important \\
+Sellers & Protection from fake bad reviews & Important \\
+Admins & Good tools to moderate and manage reviews & Very Important \\
+Developers & System works correctly and is easy to maintain & Very Important \\
+Regulators & System helps catch illegal fake review activity & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%==========================================================
+%  LAB 3 -- DETAILED REQUIREMENT ANALYSIS (SRS)
+%==========================================================
+\chapter{Detailed Requirement Analysis (SRS)}
+
+\section{What is an SRS?}
+
+An SRS stands for \textbf{Software Requirements Specification}. It is a detailed document that explains exactly what the software should do, for whom, under what conditions, and to what standard.
+
+Think of the SRS as a \textbf{full agreement} between the people who want the software and the people who will build it. If anything is confusing later, both sides look at the SRS to find the answer.
+
+\section{Purpose}
+
+The purpose of this SRS is to clearly describe the ReviewGuard system so that:
+\begin{itemize}
+  \item The development team knows exactly what to build.
+  \item The teacher / client knows exactly what they will get.
+  \item The testers know what to test.
+\end{itemize}
+
+\section{Scope of the System}
+
+ReviewGuard is made up of three main parts:
+\begin{enumerate}
+  \item \textbf{Chrome Extension} -- The small tool added to the browser. It reads reviews from shopping pages.
+  \item \textbf{AI Server (Backend)} -- A Python program that runs on a server. It takes review text, checks it using AI, and sends back a result.
+  \item \textbf{AI Model} -- The brain of the system. It was trained on thousands of real and fake reviews. It makes the Real/Fake decision.
+\end{enumerate}
+
+\section{Simple Word Meanings}
+
+\begin{table}[H]
+\centering
+\caption{Important Words and Their Meanings}
+\begin{tabular}{ll}
+\toprule
+\textbf{Word / Short Form} & \textbf{What It Means} \\
+\midrule
+NLP & Natural Language Processing -- teaching computers to understand human text \\
+TF-IDF & A method to find which words are most important in a review \\
+SVM & Support Vector Machine -- a type of AI that learns to separate real from fake \\
+API & A way for two software programs to talk to each other \\
+ML & Machine Learning -- AI that learns from examples \\
+Chrome Extension & A small add-on program inside the Chrome browser \\
+Flask & A simple Python tool for building websites and servers \\
+DOM & The structure of a webpage (all the parts you see on a website) \\
+JSON & A simple text format used to send data between programs \\
+HTTPS & Secure internet connection (like a locked channel) \\
+Database & A place where information is stored and organized \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{What the System Looks Like from the Outside}
+
+\subsection{What the User Sees}
+
+\begin{itemize}
+  \item \textbf{Extension Popup:} A small window that opens when you click the ReviewGuard icon. It shows the overall review score for the current product page.
+  \item \textbf{Review Badges:} Green or red labels that appear directly on each review on the shopping page.
+  \item \textbf{Admin Website:} A separate website where admins can see all flagged reviews and manage the AI.
+\end{itemize}
+
+\subsection{Other Programs It Uses}
+\begin{itemize}
+  \item Google Chrome browser
+  \item Python programming language for the AI server
+  \item A database (SQLite for testing, PostgreSQL for real use) to save results
+\end{itemize}
+
+\subsection{How It Sends Data}
+\begin{itemize}
+  \item The extension sends review text to the AI server over the internet using HTTPS (secure connection).
+  \item The server sends back the result (Real or Fake + confidence percentage) in JSON format.
+\end{itemize}
+
+\section{All Use Cases (Things Users Can Do)}
+
+\begin{table}[H]
+\centering
+\caption{List of Use Cases}
+\begin{tabularx}{\textwidth}{lllX}
+\toprule
+\textbf{No.} & \textbf{Name} & \textbf{Who Does It} & \textbf{What Happens} \\
+\midrule
+UC-01 & Open Product Page & Shopper & Shopper opens a shopping page; extension starts working automatically. \\
+UC-02 & See Review Badge & Shopper & Shopper sees green (Real) or red (Fake) badge on each review. \\
+UC-03 & See Summary & Shopper & Shopper opens popup to see the overall score for this product's reviews. \\
+UC-04 & Report a Review & Shopper & Shopper clicks a button to manually report a suspicious review. \\
+UC-05 & Admin Login & Admin & Admin enters username and password to access the admin website. \\
+UC-06 & See Flagged Reviews & Admin & Admin sees a list of all reviews marked as fake. \\
+UC-07 & Download Report & Admin & Admin downloads a file with all flagged review details. \\
+UC-08 & Retrain the AI & Admin / Developer & Admin uploads new data; the system relearns and improves. \\
+UC-09 & Check Server Status & Developer & Developer checks if the AI server is working properly. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Limits and Assumptions}
+
+\textbf{Assumptions (things we assume are true):}
+\begin{itemize}
+  \item The user has Google Chrome installed on their computer.
+  \item The AI server is connected to the internet and running.
+  \item Reviews appear as visible text on the shopping page (not hidden).
+  \item The AI model is updated at least once every 3 months.
+\end{itemize}
+
+\textbf{Limits (things the system cannot do right now):}
+\begin{itemize}
+  \item The AI can only check English reviews.
+  \item The extension only works on product pages it knows the structure of (like Amazon).
+  \item When you visit a page, the AI does not learn from it in real time -- it only learns during a planned retraining session.
+\end{itemize}
+
+%==========================================================
+%  LAB 4 -- DESIGN PART ONE: USE CASE DIAGRAM
+%==========================================================
+\chapter{Design Part One -- Use Case Diagram}
+
+\section{What is a Use Case Diagram?}
+
+A \textbf{Use Case Diagram} is a simple picture that shows:
+\begin{itemize}
+  \item \textbf{Who} uses the system (called Actors)
+  \item \textbf{What} they can do with the system (called Use Cases)
+  \item \textbf{How} the actors and use cases are connected
+\end{itemize}
+
+Think of it like a map of all the features of a system and who uses each feature.
+
+\section{Actors in ReviewGuard}
+
+An \textbf{Actor} is any person or system that interacts with ReviewGuard.
+
+\begin{table}[H]
+\centering
+\caption{All Actors in ReviewGuard}
+\begin{tabular}{lll}
+\toprule
+\textbf{Actor Name} & \textbf{Type} & \textbf{Role} \\
+\midrule
+Shopper & Human & Uses the extension to check reviews while shopping \\
+Admin / Moderator & Human & Manages the admin website and controls the AI \\
+Developer & Human & Maintains the server and updates the AI \\
+Chrome Browser & Software & Runs the extension and shows badges on the page \\
+AI Server (Flask) & Software & Receives review text and returns Real/Fake result \\
+AI Model & Software & The trained brain that makes the Real/Fake decision \\
+Database & Software & Stores all classification results and logs \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Use Case Diagram}
+
+\imagebox{Use Case Diagram showing all actors on the outside (Shopper, Admin, Developer, AI Server, Database) and all use cases inside a rectangle (Open Product Page, See Badge, See Summary, Report Review, Admin Login, See Flagged Reviews, Download Report, Retrain AI, Check Server). Lines connect each actor to the use cases they are involved in. Include and Extend arrows where relevant.}{ReviewGuard -- Complete Use Case Diagram}
+
+\section{Detailed Description of Each Use Case}
+
+\subsection{UC-01: Open Product Page}
+
+\begin{table}[H]
+\centering
+\caption{UC-01: Open Product Page}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Field} & \textbf{Details} \\
+\midrule
+Use Case ID & UC-01 \\
+Name & Open Product Page \\
+Who does it & Shopper \\
+Before it starts & ReviewGuard extension is installed and turned on. Shopper is on a shopping website. \\
+What starts it & The page loads in the browser. \\
+Normal steps & 1. Shopping page opens. 2. Extension starts automatically. 3. It reads all reviews on the page. 4. It sends reviews to the AI server. 5. AI checks each review. 6. Results come back. 7. Green or red badges appear on reviews. \\
+If no reviews found & Extension shows "No reviews found on this page" in the popup. \\
+If server is down & Extension shows "Service not available right now" and no badges appear. \\
+After it finishes & Each review has a badge showing if it is Real or Fake. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{UC-02: See Review Badge}
+
+\begin{table}[H]
+\centering
+\caption{UC-02: See Review Badge}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Field} & \textbf{Details} \\
+\midrule
+Use Case ID & UC-02 \\
+Name & See Review Badge \\
+Who does it & Shopper \\
+Before it starts & UC-01 must have finished successfully. \\
+Normal steps & Shopper sees a green badge saying "Real (95\%)" or a red badge saying "Fake (87\%)" on each review. \\
+After it finishes & Shopper can now make a better, more informed decision about the product. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{UC-05: Admin Login}
+
+\begin{table}[H]
+\centering
+\caption{UC-05: Admin Login}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Field} & \textbf{Details} \\
+\midrule
+Use Case ID & UC-05 \\
+Name & Admin Login \\
+Who does it & Admin \\
+Before it starts & Admin has a username and password. \\
+Normal steps & 1. Admin opens the admin website. 2. Types their username and password. 3. System checks if they match. 4. Admin is allowed inside the dashboard. \\
+If wrong password & System shows an error message. After 5 wrong tries, the account is locked for safety. \\
+After it finishes & Admin can now see and manage all reviews and reports. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{UC-08: Retrain the AI}
+
+\begin{table}[H]
+\centering
+\caption{UC-08: Retrain the AI}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Field} & \textbf{Details} \\
+\midrule
+Use Case ID & UC-08 \\
+Name & Retrain the AI \\
+Who does it & Admin or Developer \\
+Before it starts & Admin is logged in. A new data file with labelled reviews is ready. \\
+Normal steps & 1. Admin uploads the new data file. 2. System checks the file is correct. 3. System starts retraining the AI. 4. The AI learns from new data. 5. System checks if the new AI is good. 6. Admin confirms to use the new AI. \\
+If new AI is not good & System keeps the old AI and tells admin the new one did not pass the quality check. \\
+After it finishes & The improved AI is now live and checking reviews. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{How Use Cases Connect to Each Other}
+
+\begin{table}[H]
+\centering
+\caption{Connections Between Use Cases}
+\begin{tabular}{lll}
+\toprule
+\textbf{Connection Type} & \textbf{Use Cases Connected} & \textbf{Meaning} \\
+\midrule
+Include & UC-01 includes UC-02 & Opening a page always shows badges (they go together) \\
+Include & UC-01 includes UC-03 & Opening a page always updates the popup summary \\
+Extend & UC-02 can extend to UC-04 & From a badge, shopper can choose to report a review \\
+Include & UC-05 includes UC-06 & After login, admin always sees the list of flagged reviews \\
+Extend & UC-06 can extend to UC-07 & Admin can choose to download a report from the list \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%==========================================================
+%  LAB 5 -- DFD AND FLOW CHART
+%==========================================================
+\chapter{DFD and Flow Chart}
+
+\section{What is a DFD?}
+
+A \textbf{Data Flow Diagram (DFD)} is a picture that shows how \textbf{data (information) moves} through a system. It shows:
+\begin{itemize}
+  \item Where data comes from (input)
+  \item What happens to the data (processing)
+  \item Where data goes (output or storage)
+\end{itemize}
+
+DFDs are drawn in levels. Level 0 shows the whole system in one box. Level 1 breaks it into main parts. Level 2, 3, 4 break each part into smaller pieces.
+
+\section{DFD Symbols}
+
+\begin{table}[H]
+\centering
+\caption{DFD Symbol Meanings}
+\begin{tabular}{lll}
+\toprule
+\textbf{Symbol} & \textbf{Shape} & \textbf{What It Represents} \\
+\midrule
+External Entity & Rectangle & A person or system outside our system (like the Shopper) \\
+Process & Circle or Rounded Box & A step that does something to the data \\
+Data Store & Open-sided Box & Where data is saved (like a database) \\
+Data Flow & Arrow with label & Data moving from one place to another \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{DFD Level 0 -- Big Picture}
+
+Level 0 shows ReviewGuard as one single box. It just shows who gives data to the system and who gets data from the system.
+
+\textbf{People / Systems connected to ReviewGuard:}
+\begin{itemize}
+  \item \textbf{Shopper} -- gives: page visit / receives: review badges and summary
+  \item \textbf{Admin} -- gives: login details, new training data / receives: reports and AI updates
+  \item \textbf{Shopping Website} -- gives: review text from the page
+  \item \textbf{Database} -- stores and returns classification results
+\end{itemize}
+
+\imagebox{DFD Level 0 Context Diagram: One big circle in the center labeled 'ReviewGuard System'. Four rectangles around it: Shopper (left), Admin (right), Shopping Website (top), Database (bottom). Arrows showing data going in and out with labels like 'Review Text', 'Real/Fake Result', 'Admin Login', 'Reports', 'Save Result', 'Get Result'}{DFD Level 0 -- Context Diagram (Big Picture)}
+
+\section{DFD Level 1 -- Main Steps}
+
+Level 1 breaks the system into 4 main steps:
+
+\begin{enumerate}
+  \item \textbf{Step 1.0 -- Read Reviews:} The Chrome extension finds all review text on the shopping page.
+  \item \textbf{Step 2.0 -- Clean the Text:} The review text is cleaned up (remove unnecessary words, make all lowercase, etc.)
+  \item \textbf{Step 3.0 -- Check with AI:} The cleaned text is checked by the AI. It decides: Real or Fake?
+  \item \textbf{Step 4.0 -- Show Result and Save:} The result is shown as a badge on the page and also saved in the database.
+\end{enumerate}
+
+\imagebox{DFD Level 1: Four process circles labeled 1.0 Read Reviews, 2.0 Clean Text, 3.0 Check with AI, 4.0 Show Result and Save. Arrows between them showing data flowing from one step to the next. External entities (Shopper, Shopping Website, Database, Admin) connected at appropriate points. Two data stores shown: D1 Review Log, D2 AI Model.}{DFD Level 1 -- Four Main Steps}
+
+\section{DFD Level 2 -- How Text is Cleaned (Step 2.0 in Detail)}
+
+This level shows the smaller steps inside the "Clean the Text" step:
+
+\begin{itemize}
+  \item \textbf{2.1 Split into Words:} "Great product!" becomes ["great", "product"]
+  \item \textbf{2.2 Make Lowercase:} "AMAZING" becomes "amazing"
+  \item \textbf{2.3 Remove Common Words:} Remove words like "the", "is", "a", "an" -- they do not help identify fake reviews
+  \item \textbf{2.4 Remove Punctuation:} Remove "!", "?", ".", "," etc.
+  \item \textbf{2.5 Find Root Words:} "running" becomes "run", "better" becomes "good" -- so the AI sees the core meaning
+  \item \textbf{2.6 Convert to Numbers:} Convert the clean words into numbers using TF-IDF so the AI can understand them
+\end{itemize}
+
+\imagebox{DFD Level 2: Six small process circles inside the 'Clean Text' bubble (2.1 Split Words, 2.2 Lowercase, 2.3 Remove Common Words, 2.4 Remove Punctuation, 2.5 Find Root Words, 2.6 Convert to Numbers). Arrows showing data flowing through each mini-step from raw review text to numbered feature list output.}{DFD Level 2 -- How Text is Cleaned Step by Step}
+
+\section{DFD Level 3 -- How the AI Checks (Step 3.0 in Detail)}
+
+\begin{itemize}
+  \item \textbf{3.1 Load the AI Model:} The trained AI model is loaded from storage.
+  \item \textbf{3.2 Run the AI:} The numbered features are fed into the AI (Naive Bayes or SVM).
+  \item \textbf{3.3 Calculate Confidence:} The AI gives a score -- e.g., 89\% chance this is fake.
+  \item \textbf{3.4 Decide Label:} If confidence is above 50\%, label as Fake. Otherwise, label as Real.
+  \item \textbf{3.5 Send Back Result:} Package the label and confidence into a result and send it back.
+\end{itemize}
+
+\imagebox{DFD Level 3: Five process circles inside the 'Check with AI' bubble (3.1 Load Model, 3.2 Run AI, 3.3 Calculate Confidence, 3.4 Decide Label, 3.5 Send Result). Arrows from 3.1 to 3.2 to 3.3 to 3.4 to 3.5. AI Model data store connected to 3.1.}{DFD Level 3 -- Inside the AI Check Step}
+
+\section{DFD Level 4 -- Admin Dashboard and AI Retraining (Step 4 Admin Side in Detail)}
+
+\begin{itemize}
+  \item \textbf{4.1 Admin Login Check:} Check if admin's username and password are correct.
+  \item \textbf{4.2 Search Saved Results:} Look up old classification results from the database.
+  \item \textbf{4.3 Make Report:} Count and organize results and create a downloadable report.
+  \item \textbf{4.4 Upload New Data:} Admin uploads a new set of real and fake review examples.
+  \item \textbf{4.5 Check the Data:} Make sure the uploaded file has the right columns and format.
+  \item \textbf{4.6 Retrain the AI:} Run the full cleaning + training process on the new data.
+  \item \textbf{4.7 Put New AI Live:} Save the new AI model and start using it for checking reviews.
+\end{itemize}
+
+\imagebox{DFD Level 4: Seven process boxes (4.1 through 4.7) for the admin and retraining process. Admin on the left connected to 4.1 (Login), then 4.2, 4.3 (report download arrow to admin). New arrows for 4.4 (upload data) to 4.5 (check data) to 4.6 (retrain) to 4.7 (go live). Database and AI Model data stores connected appropriately.}{DFD Level 4 -- Admin Dashboard and AI Retraining Steps}
+
+\section{Flow Chart -- How One Review is Checked from Start to Finish}
+
+\imagebox{Flowchart starting with START. Decision: Did user open a shopping page? No: END. Yes: Did extension activate? No: END. Yes: Extract review text from page. Decision: Were reviews found? No: Show 'No reviews found' message, END. Yes: Send reviews to AI server. Decision: Is server available? No: Show 'Service unavailable', END. Yes: Clean the review text (remove stopwords, punctuate, stem). Convert text to numbers (TF-IDF). Run AI classifier. Decision: Confidence above 50\%? Yes: Label as FAKE. No: Label as REAL. Show green/red badge on review. Save result to database. Update popup summary. END.}{Full Flow Chart -- How ReviewGuard Checks One Review}
+
+%==========================================================
+%  LAB 6 -- CLASS DIAGRAM AND OBJECT DIAGRAM
+%==========================================================
+\chapter{Class Diagram and Object Diagram}
+
+\section{What is a Class Diagram?}
+
+A \textbf{Class Diagram} shows all the main \textbf{building blocks} (called classes) of the software. For each building block it shows:
+\begin{itemize}
+  \item \textbf{Attributes} -- what information it holds (like a variable)
+  \item \textbf{Methods} -- what it can do (like a function or action)
+  \item \textbf{Relationships} -- how it connects to other building blocks
+\end{itemize}
+
+Think of a class like a \textbf{blueprint}. For example, a blueprint of a car shows all its parts and what each part does.
+
+\section{Main Classes in ReviewGuard}
+
+\subsection{ReviewExtractor Class}
+This class is part of the Chrome extension. Its job is to find and collect all review text from the shopping page.
+
+\begin{itemize}
+  \item \textbf{Information it stores:} current page address, list of reviews, whether extraction worked
+  \item \textbf{Things it can do:} scan the page for reviews, check if reviews are valid, send reviews to the server
+\end{itemize}
+
+\subsection{TextCleaner Class}
+This class cleans up raw review text before the AI checks it.
+
+\begin{itemize}
+  \item \textbf{Information it stores:} list of common words to remove, language setting
+  \item \textbf{Things it can do:} split text into words, remove common words, remove punctuation, find root words, do full cleaning in one step
+\end{itemize}
+
+\subsection{FeatureConverter Class}
+This class turns cleaned text into numbers using TF-IDF.
+
+\begin{itemize}
+  \item \textbf{Information it stores:} the TF-IDF tool (vectoriser), word list
+  \item \textbf{Things it can do:} learn from training data, convert new text to numbers, save and load the converter
+\end{itemize}
+
+\subsection{ReviewChecker Class (AI Classifier)}
+This is the AI brain. It uses the numbers from FeatureConverter to decide Real or Fake.
+
+\begin{itemize}
+  \item \textbf{Information it stores:} the trained AI model, which type (Naive Bayes or SVM), decision threshold, version number
+  \item \textbf{Things it can do:} train on data, predict label for new review, give confidence score, test accuracy, save and load the model
+\end{itemize}
+
+\subsection{ClassificationResult Class}
+Stores the result of checking one review.
+
+\begin{itemize}
+  \item \textbf{Information it stores:} review ID, original text, label (0=Real, 1=Fake), confidence score, time of result
+  \item \textbf{Things it can do:} convert result to JSON format, convert to CSV row
+\end{itemize}
+
+\subsection{APIServer Class (Flask)}
+The main server program. It receives reviews, runs them through the cleaner and checker, and sends back results.
+
+\begin{itemize}
+  \item \textbf{Information it stores:} the cleaner, converter, checker, and database
+  \item \textbf{Things it can do:} check one review, check many reviews at once, do a health check, retrain the AI
+\end{itemize}
+
+\subsection{DatabaseManager Class}
+Handles saving and reading data from the database.
+
+\begin{itemize}
+  \item \textbf{Information it stores:} database connection details
+  \item \textbf{Things it can do:} save a result, search for results, download results as a file
+\end{itemize}
+
+\subsection{AdminDashboard Class}
+Controls the admin website.
+
+\begin{itemize}
+  \item \textbf{Information it stores:} admin user details, database connection
+  \item \textbf{Things it can do:} handle admin login, show list of fake reviews, download reports, start AI retraining
+\end{itemize}
+
+\subsection{Admin Class}
+Represents an admin user account.
+
+\begin{itemize}
+  \item \textbf{Information it stores:} admin ID, username, password (encrypted), role, last login time
+  \item \textbf{Things it can do:} verify password, check if this admin has permission for an action
+\end{itemize}
+
+\section{Class Diagram Picture}
+
+\imagebox{Complete UML Class Diagram showing all 9 classes (ReviewExtractor, TextCleaner, FeatureConverter, ReviewChecker, ClassificationResult, APIServer, DatabaseManager, AdminDashboard, Admin) drawn as UML class boxes with attributes in the middle section and methods in the bottom section. Lines between classes showing: APIServer has-a TextCleaner (composition), APIServer has-a FeatureConverter (composition), APIServer has-a ReviewChecker (composition), APIServer uses DatabaseManager (association), ReviewExtractor calls APIServer (dependency), AdminDashboard uses DatabaseManager (association), AdminDashboard is accessed by Admin (association), APIServer creates ClassificationResult (dependency), DatabaseManager stores ClassificationResult (association).}{UML Class Diagram -- All ReviewGuard Classes and Their Connections}
+
+\section{How Classes are Connected}
+
+\begin{table}[H]
+\centering
+\caption{Connections Between Classes}
+\begin{tabularx}{\textwidth}{lllX}
+\toprule
+\textbf{Class A} & \textbf{Connection} & \textbf{Class B} & \textbf{Meaning} \\
+\midrule
+APIServer & Owns & TextCleaner & Server always has a text cleaner running \\
+APIServer & Owns & FeatureConverter & Server always has the number converter running \\
+APIServer & Owns & ReviewChecker & Server always has the AI brain running \\
+APIServer & Uses & DatabaseManager & Server saves results using the database manager \\
+ReviewExtractor & Calls & APIServer & Extension sends review text to the server \\
+ReviewChecker & Depends on & FeatureConverter & AI needs numbers from the converter to work \\
+TextCleaner & Feeds into & FeatureConverter & Cleaned text goes into the converter \\
+AdminDashboard & Uses & DatabaseManager & Admin website reads from the database \\
+AdminDashboard & Logged in by & Admin & Only an Admin user can open the dashboard \\
+APIServer & Creates & ClassificationResult & Server creates a result object for each review \\
+DatabaseManager & Stores & ClassificationResult & Database saves each result object \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{What is an Object Diagram?}
+
+An \textbf{Object Diagram} is like a photograph of the class diagram at one specific moment. Instead of blueprints, it shows actual real examples (called objects).
+
+For example, while a user is visiting an Amazon product page with 3 reviews:
+
+\imagebox{UML Object Diagram showing three actual ReviewResult objects: review1 (label=Real, confidence=92\%), review2 (label=Fake, confidence=88\%), review3 (label=Real, confidence=79\%). Each connected to an APIServer object and a DatabaseManager object with specific example values filled in for all attributes. All values shown in boxes with underlined names indicating they are real objects not blueprints.}{UML Object Diagram -- System State While Checking 3 Reviews}
+
+%==========================================================
+%  LAB 7 -- INTERFACES, REPORTS, SAMPLE INPUT/OUTPUT, ER DIAGRAM
+%==========================================================
+\chapter{Interfaces, Reports, Sample Input/Output, and ER Diagram}
+
+\section{What the User Sees -- Interfaces}
+
+\subsection{Chrome Extension Popup}
+
+When you click the ReviewGuard icon in the Chrome toolbar, a small window opens. This is the popup.
+
+\textbf{What is inside the popup:}
+\begin{itemize}
+  \item \textbf{Top area:} ReviewGuard logo and a dot showing if the system is active (green dot = active)
+  \item \textbf{Score card:} A circle showing the overall score, e.g., "72\% Real Reviews"
+  \item \textbf{Review list:} A scrollable list showing each review title with its label (Real/Fake) and confidence score
+  \item \textbf{Buttons:} A "Report This Review" button and a toggle to turn the extension on or off
+  \item \textbf{Bottom:} Shows which version of the AI model is being used
+\end{itemize}
+
+\imagebox{Wireframe/mockup of the ReviewGuard Chrome Extension Popup. Top: Logo and green active dot. Middle top: Large circle showing 72\% with 'Real Reviews' label. Middle: Scrollable list with 3 review entries, each showing a title, and a green 'Real' or red 'Fake' badge with percentage. Bottom: Two buttons - 'Report Review' and 'Settings'. Clean and simple design.}{ReviewGuard Chrome Extension Popup -- Screen Design}
+
+\subsection{Review Badges on the Shopping Page}
+
+The extension automatically adds a small label (badge) below each review on the shopping page. The user does not need to do anything.
+
+\textbf{Badge types:}
+\begin{itemize}
+  \item \textbf{Green badge:} Shows "✓ Real (92\%)" -- this review looks genuine
+  \item \textbf{Red badge:} Shows "⚠ Fake (85\%)" -- this review looks suspicious
+  \item If you hover your mouse over the badge, a small message appears explaining the result
+\end{itemize}
+
+\imagebox{Screenshot or wireframe of a product review page on Amazon with two example reviews. Under the first review (5 stars): a green badge showing 'Real (92\%)'. Under the second review (5 stars): a red badge showing 'Fake (85\%)'. Badges are small, colored boxes injected just below the reviewer name.}{Review Badges Injected on Shopping Page by ReviewGuard Extension}
+
+\subsection{Admin Dashboard}
+
+The admin dashboard is a separate website only admins can access.
+
+\textbf{What is on the dashboard:}
+\begin{itemize}
+  \item \textbf{Overview Cards:} Total reviews checked, total fake reviews found, AI accuracy percentage
+  \item \textbf{Review Table:} A table showing each flagged review with columns: Review ID, Product Name, Date, Label, Confidence, Action
+  \item \textbf{Filter and Search:} Admins can filter by date, product, or confidence level
+  \item \textbf{AI Management:} Shows current AI version and has a button to start retraining
+  \item \textbf{Download Report:} Buttons to download the data as a spreadsheet file or PDF
+\end{itemize}
+
+\imagebox{Admin Dashboard wireframe showing: Left sidebar with menu (Overview, Reviews, AI Model, Reports, Settings). Main area with four summary cards at top (Total Reviews Checked, Total Fake Found, AI Accuracy, Server Status). Below: a table of flagged reviews with columns Review ID, Product, Date, Label, Confidence, Action. At bottom: 'Download CSV' and 'Retrain AI' buttons.}{Admin Dashboard -- Full Screen Layout}
+
+\section{Reports}
+
+\subsection{Product Review Report -- Sample}
+
+The admin can generate a report for any product. Here is what a sample looks like:
+
+\begin{table}[H]
+\centering
+\caption{Sample Product Authenticity Report}
+\begin{tabular}{lllll}
+\toprule
+\textbf{Review No.} & \textbf{Result} & \textbf{Confidence} & \textbf{Date and Time} \\
+\midrule
+RV-001 & Real & 92.4\% & 10 March 2026, 2:22 PM \\
+RV-002 & Fake & 87.1\% & 10 March 2026, 2:22 PM \\
+RV-003 & Real & 78.9\% & 10 March 2026, 2:22 PM \\
+RV-004 & Fake & 93.5\% & 10 March 2026, 2:23 PM \\
+RV-005 & Real & 81.2\% & 10 March 2026, 2:23 PM \\
+\midrule
+\multicolumn{3}{l}{\textbf{Summary:}} & \textbf{60\% Real, 40\% Fake} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{AI Performance Report}
+
+\begin{table}[H]
+\centering
+\caption{AI Model Performance Results}
+\begin{tabular}{llll}
+\toprule
+\textbf{AI Type} & \textbf{Accuracy} & \textbf{F1 Score} & \textbf{AUC Score} \\
+\midrule
+Naive Bayes & 88.4\% & 0.879 & 0.921 \\
+SVM (our main model) & 91.2\% & 0.908 & 0.951 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Sample Input and Output}
+
+\subsection{Example 1 -- Fake Review}
+
+\textbf{What the extension sends to the server:}
+
+\textbf{What the server sends back:}
+
+\textit{Result: 89.1\% confidence this review is FAKE. Red badge shown.}
+
+\subsection{Example 2 -- Real Review}
+
+\textbf{Input:}
+
+\textbf{Output:}
+
+\textit{Result: 92.3\% confidence this review is REAL. Green badge shown.}
+
+\section{ER Diagram -- How the Database is Organized}
+
+An \textbf{ER Diagram} (Entity Relationship Diagram) shows how different pieces of data in the database are related to each other.
+
+\subsection{What Data We Store (Entities)}
+
+\begin{enumerate}
+  \item \textbf{Review:} review ID, review text, page URL, time when it was submitted
+  \item \textbf{Result:} result ID, label (0=Real, 1=Fake), confidence score, AI version, time of result
+  \item \textbf{Product:} product ID, product name, website URL, shopping platform, category
+  \item \textbf{Admin:} admin ID, username, password (encrypted), role, last login time
+  \item \textbf{AI Model Version:} version ID, version name, training date, accuracy score, file location
+  \item \textbf{Flagged Review:} flag ID, reason, who flagged it, time it was flagged
+\end{enumerate}
+
+\subsection{How They Connect}
+
+\begin{table}[H]
+\centering
+\caption{Database Relationships}
+\begin{tabular}{lll}
+\toprule
+\textbf{Entity A} & \textbf{How They Connect} & \textbf{Entity B} \\
+\midrule
+Review & Gets one Result & ClassificationResult \\
+Review & Belongs to one & Product \\
+Result & Was made by one & AI Model Version \\
+Admin & Manages many & Flagged Reviews \\
+Review & Can have one & Flagged Review \\
+Admin & Can trigger & AI Model Version (retraining) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\imagebox{ER Diagram showing 6 entity boxes: Review, ClassificationResult, Product, Admin, ModelVersion, FlaggedReview. Each box has its attributes listed inside. Primary key attributes are underlined. Diamond shapes between entities show relationships with labels: 'gets result' (1:1), 'belongs to' (N:1), 'made by' (N:1), 'manages' (1:N), 'has' (1:0..1), 'triggers' (1:N). Cardinality numbers on each end of the relationship lines.}{ER Diagram -- ReviewGuard Database Structure}
+
+%==========================================================
+%  LAB 8 -- IMPLEMENTATION PART ONE: ALGORITHMS
+%==========================================================
+\chapter{Implementation Part One -- Algorithms}
+
+\section{What is this Lab About?}
+
+This lab shows the actual computer code and step-by-step instructions (called algorithms) that make ReviewGuard work. All the code is written in \textbf{Python}. We use simple, standard tools:
+
+\begin{itemize}
+  \item \textbf{NLTK} -- for cleaning text (removing stop words, finding root words)
+  \item \textbf{Scikit-learn} -- for TF-IDF, Naive Bayes, and SVM
+  \item \textbf{Flask} -- for the web server (API)
+\end{itemize}
+
+\section{Algorithm 1 -- Text Cleaning}
+
+\subsection{What it Does}
+Takes a raw review like "AMAZING product!! You must buy it!!!" and converts it into clean simple words like "amaz product must buy" so the AI can understand it.
+
+\subsection{Steps (Pseudocode)}
+
+\subsection{Python Code}
+
+\section{Algorithm 2 -- Converting Text to Numbers (TF-IDF)}
+
+\subsection{What it Does}
+
+After cleaning, the text is still words. But the AI needs \textbf{numbers} to work. TF-IDF converts each review into a list of numbers. Words that appear often in a review but rarely in all other reviews get a high score -- these are important words that help identify the review type.
+
+\subsection{The Math Formula (Explained Simply)}
+
+\textbf{TF (Term Frequency)} = How many times a word appears in one review divided by total words in that review.
+
+\[
+TF = \frac{\text{How many times the word appears in this review}}{\text{Total words in this review}}
+\]
+
+\textbf{IDF (Inverse Document Frequency)} = A score that is high for rare words and low for very common words.
+
+\[
+IDF = \log\left(\frac{\text{Total number of reviews}}{\text{Number of reviews containing this word}}\right)
+\]
+
+\textbf{TF-IDF} = TF multiplied by IDF. This gives the final importance score for each word in each review.
+
+\subsection{Python Code}
+
+\section{Algorithm 3 -- Naive Bayes AI Classifier}
+
+\subsection{What it Does}
+
+Naive Bayes is a simple but powerful AI that decides whether a review is Real or Fake. It looks at which words appear most often in real reviews vs fake reviews, and uses that pattern to decide.
+
+\subsection{Simple Explanation of the Math}
+
+Naive Bayes asks: "Given these words, what is the probability that this review is fake?"
+
+\[
+P(\text{Fake} \mid \text{words in review}) \propto P(\text{Fake}) \times P(\text{each word} \mid \text{Fake})
+\]
+
+It calculates the probability for both Fake and Real, and picks whichever is higher.
+
+\subsection{Python Code}
+
+\section{Algorithm 4 -- SVM AI Classifier (Our Best Model)}
+
+\subsection{What it Does}
+
+SVM (Support Vector Machine) is a smarter AI that finds the best \textbf{dividing line} between real reviews and fake reviews. It is more accurate than Naive Bayes and is our main AI in ReviewGuard.
+
+\subsection{Simple Explanation of the Math}
+
+Imagine all reviews plotted as dots in space. Real reviews are blue dots, fake reviews are red dots. SVM finds the line (or wall) that best separates blue from red, with the biggest gap possible.
+
+\[
+\text{Find the dividing line that has the largest gap between Real and Fake reviews}
+\]
+
+\subsection{Python Code}
+
+\section{Algorithm 5 -- Full Training Process}
+
+%==========================================================
+%  LAB 9 -- IMPLEMENTATION PART TWO: INTEGRATION
+%==========================================================
+\chapter{Implementation Part Two -- Integration}
+
+\section{What is Integration?}
+
+Integration means connecting all the separately built parts together so they work as one complete system. ReviewGuard has three parts:
+
+\begin{enumerate}
+  \item \textbf{Chrome Extension} (the part the user sees)
+  \item \textbf{Flask Server (API)} (the middle part that runs on a server)
+  \item \textbf{AI Model + Database} (the back part that stores and processes data)
+\end{enumerate}
+
+In this lab we put them all together.
+
+\section{Project Folder Structure}
+
+\section{The Flask Server -- Main Program (app.py)}
+
+\section{Chrome Extension -- Key Files}
+
+\subsection{manifest.json -- Extension Settings}
+
+\subsection{content.js -- Reads Reviews and Shows Badges}
+
+\section{Database -- Saving Results}
+
+\section{How the System Is Deployed (Put Online)}
+
+\imagebox{Deployment diagram showing: Left side: User's computer with Chrome browser and ReviewGuard extension. Arrow labeled 'HTTPS Request' pointing right to: Middle: Server (AWS or Heroku) running the Flask Python app with the loaded AI Model. Arrow from server to: Right bottom: SQLite/PostgreSQL Database storing all results. Arrow from server to: Right top: Admin Dashboard website. All connections labeled with their type (HTTPS, SQL).}{ReviewGuard Deployment Diagram -- How Everything Connects Online}
+
+\section{Integration Testing -- Checking That All Parts Work Together}
+
+\begin{table}[H]
+\centering
+\caption{Integration Tests -- Does Everything Work Together?}
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+\textbf{Test No.} & \textbf{What We Test} & \textbf{Expected Result} \\
+\midrule
+IT-01 & Extension sends a real review to server & Server says "Real" + HTTP 200 OK \\
+IT-02 & Extension sends a fake review to server & Server says "Fake" + HTTP 200 OK \\
+IT-03 & Server is offline, extension tries to connect & Error message shown, no crash \\
+IT-04 & Server saves result to database & Record appears in the database \\
+IT-05 & AI model file is missing & Server returns error 503 (not available) \\
+IT-06 & Page has no reviews & Popup shows "No reviews found" \\
+IT-07 & Admin views flagged reviews in dashboard & Table shows all Fake-labelled records \\
+IT-08 & Admin uploads new data and retrains AI & New model deployed, new accuracy shown \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%==========================================================
+%  LAB 10 -- TESTING AND DELIVERY
+%==========================================================
+\chapter{Testing and Delivery}
+
+\section{What is Testing?}
+
+Testing means checking that the software actually works correctly. We test to find mistakes (called bugs) and fix them before giving the software to users. Good testing makes sure the software does what it is supposed to do.
+
+\section{Types of Tests We Did}
+
+\begin{table}[H]
+\centering
+\caption{Types of Testing}
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+\textbf{Type of Testing} & \textbf{What it Checks} & \textbf{Tools Used} \\
+\midrule
+Unit Testing & Each small function works correctly by itself & pytest \\
+Integration Testing & All parts work together & pytest, Postman \\
+System Testing & The whole system works end-to-end & Manual, Selenium \\
+User Testing (UAT) & Real users can use it easily & 15 volunteer testers \\
+Speed Testing & System works fast even with many users & Locust \\
+Security Testing & Data is safe and protected & Manual checklist \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Unit Tests -- Testing Small Functions}
+
+\subsection{Testing the Text Cleaner}
+
+\subsection{Testing the AI Checker}
+
+\section{System Tests -- Testing the Whole System}
+
+\begin{table}[H]
+\centering
+\caption{System Test Cases -- End to End}
+\begin{tabularx}{\textwidth}{llXl}
+\toprule
+\textbf{Test No.} & \textbf{Step} & \textbf{What We Do and What We Expect} & \textbf{Result} \\
+\midrule
+ST-01 & Full flow & Open Amazon page with extension ON; green/red badges appear within 2 seconds & Pass \\
+ST-02 & Popup & Open popup; summary shows correct percentage of real reviews & Pass \\
+ST-03 & Known fake review & Send a known fake review to API; expect label=Fake with confidence above 80\% & Pass \\
+ST-04 & Known real review & Send a known real review to API; expect label=Real with confidence above 80\% & Pass \\
+ST-05 & Turn off extension & Disable extension, reload page; no badges should appear & Pass \\
+ST-06 & Admin dashboard & Admin logs in and views flagged review table & Pass \\
+ST-07 & Export report & Admin clicks Download; CSV file downloads with correct data & Pass \\
+ST-08 & Retrain AI & Admin uploads new data, triggers retrain; new model version appears & Pass \\
+ST-09 & 100 requests at once & Send 100 review checks at the same time; all complete in under 5 seconds & Pass \\
+ST-10 & Empty review text & Send empty text; server returns error message (not crash) & Pass \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{AI Accuracy Results}
+
+\subsection{Confusion Matrix -- What the AI Got Right and Wrong}
+
+A \textbf{Confusion Matrix} shows how many reviews the AI got right and wrong.
+
+\begin{table}[H]
+\centering
+\caption{Confusion Matrix -- SVM AI on Test Data (8,086 reviews)}
+\begin{tabular}{llcc}
+\toprule
+& & \multicolumn{2}{c}{\textbf{AI Said}} \\
+\cmidrule{3-4}
+& & \textbf{Real} & \textbf{Fake} \\
+\midrule
+\multirow{2}{*}{\textbf{Actual}} & \textbf{Real} & 3,602 Correct (TN) & 441 Wrong (FP) \\
+& \textbf{Fake} & 270 Wrong (FN) & 3,773 Correct (TP) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{The AI correctly identified 3,773 fake reviews and 3,602 real reviews. It only made mistakes on 711 reviews out of 8,086.}
+
+\subsection{Accuracy Score Results}
+
+\begin{table}[H]
+\centering
+\caption{Final Accuracy Results -- Naive Bayes vs SVM}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{AI Type} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Score} \\
+\midrule
+Naive Bayes & 88.4\% & 86.9\% & 89.1\% & 0.879 \\
+SVM (Main) & 91.2\% & 89.5\% & 93.3\% & 0.914 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{Simple Meaning: Our SVM AI correctly identifies 91.2\% of reviews. Out of 100 fake reviews, it catches 93 of them correctly.}
+
+\imagebox{Bar chart comparing Naive Bayes and SVM on four metrics: Accuracy, Precision, Recall, F1 Score. SVM bars (dark blue) are all taller than Naive Bayes bars (light blue). X-axis shows metric names, Y-axis shows percentage from 80\% to 95\%. Values labeled on top of each bar.}{AI Performance Comparison -- Naive Bayes vs SVM}
+
+\imagebox{ROC Curve graph showing True Positive Rate (y-axis) vs False Positive Rate (x-axis) for both Naive Bayes (AUC=0.921) and SVM (AUC=0.951). Both curves are above the diagonal 'random guess' line. SVM curve is higher. Legend in top-left corner.}{ROC Curve -- Showing How Well Each AI Detects Fake Reviews}
+
+\section{Speed Testing Results}
+
+We tested how fast the system can handle many users at the same time using a tool called Locust.
+
+\begin{table}[H]
+\centering
+\caption{Speed Test Results -- 200 Users at the Same Time}
+\begin{tabular}{lccc}
+\toprule
+\textbf{What We Measured} & \textbf{Our Result} & \textbf{Target} & \textbf{Pass/Fail} \\
+\midrule
+Average time to get result & 320 ms & Less than 500 ms & Pass \\
+Slowest 5\% of requests & 480 ms & Less than 500 ms & Pass \\
+Reviews checked per second & 215 & More than 200 & Pass \\
+Error rate (failed requests) & 0.3\% & Less than 1\% & Pass \\
+Maximum users at once & 200 & 200 & Pass \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{User Testing (UAT) -- Did Real People Find It Easy?}
+
+We gave the extension to \textbf{15 volunteers} (students and teachers). They installed it and used it on Amazon for 30 minutes. Then we asked them to rate it.
+
+\begin{table}[H]
+\centering
+\caption{User Testing Feedback Results}
+\begin{tabular}{lcc}
+\toprule
+\textbf{What We Asked} & \textbf{Satisfied Users} & \textbf{Average Rating (out of 5)} \\
+\midrule
+Is the badge easy to understand? & 93\% & 4.4 \\
+Did the page load at normal speed? & 87\% & 4.1 \\
+Is the popup clear and easy to read? & 100\% & 4.7 \\
+Is ReviewGuard useful for shopping? & 93\% & 4.5 \\
+Would you tell a friend to use it? & 87\% & 4.3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Bugs We Found and Fixed}
+
+\begin{table}[H]
+\centering
+\caption{Bugs Found During Testing}
+\begin{tabularx}{\textwidth}{llXl}
+\toprule
+\textbf{Bug No.} & \textbf{How Bad} & \textbf{Description} & \textbf{Fixed?} \\
+\midrule
+BUG-01 & High & Extension crashed on pages where reviews were inside a frame (iframe) & Yes \\
+BUG-02 & Medium & Server gave an error if a review was longer than 5,000 characters & Yes \\
+BUG-03 & Low & Popup showed 0\% briefly before the results came in & Yes \\
+BUG-04 & Medium & Duplicate records saved when user refreshed the page quickly & Yes \\
+BUG-05 & Low & Download Report button was hidden on small screens & Not yet \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{What We Delivered (Final Deliverables)}
+
+\begin{table}[H]
+\centering
+\caption{All Deliverables for ReviewGuard}
+\begin{tabular}{lll}
+\toprule
+\textbf{What} & \textbf{Format} & \textbf{Done?} \\
+\midrule
+Chrome Extension (ready to install) & .crx file & Yes \\
+AI Server code & Python files on GitHub & Yes \\
+Trained AI model files & .pkl files & Yes \\
+Admin Dashboard website & Flask web app & Yes \\
+Review dataset used for training & CSV file (40,427 rows) & Yes \\
+Software Requirements Document (SRS) & PDF & Yes \\
+DFD and Design Diagrams & PDF & Yes \\
+Test Report & PDF & Yes \\
+This Project Report (all 10 labs) & PDF / LaTeX & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{How We Worked -- Sprint Plan}
+
+We used \textbf{Agile} method to build this project step by step. Each "Sprint" is a 2-week work period with a specific goal.
+
+\begin{table}[H]
+\centering
+\caption{Sprint-by-Sprint Plan}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Sprint} & \textbf{Duration} & \textbf{What We Built} \\
+\midrule
+Sprint 1 & 2 weeks & Defined the problem, found dataset, made SRS and stakeholder list \\
+Sprint 2 & 2 weeks & Drew DFD levels 0--4, use case diagram, class diagram, ER diagram \\
+Sprint 3 & 2 weeks & Built text cleaning pipeline, TF-IDF converter, trained Naive Bayes \\
+Sprint 4 & 2 weeks & Trained SVM, tested accuracy, built the Flask API server \\
+Sprint 5 & 2 weeks & Built Chrome extension (content.js, popup), showed badges on page \\
+Sprint 6 & 2 weeks & Built admin dashboard, connected database, added batch checking \\
+Sprint 7 & 2 weeks & Did unit tests, integration tests, system tests, fixed all bugs \\
+Sprint 8 & 1 week & User testing, speed testing, final report writing, submission \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Ideas for Future Improvement}
+
+\begin{enumerate}
+  \item \textbf{Smarter AI:} Use a newer AI called BERT (which understands sentence meaning better) to improve accuracy even more.
+  \item \textbf{Other Languages:} Add support for Hindi, Tamil, and other Indian languages so more people can use it.
+  \item \textbf{Check the Reviewer Too:} Look at the reviewer's history -- if they only post 5-star reviews, that is suspicious too.
+  \item \textbf{Firefox Version:} Make the extension work on Firefox browser as well.
+  \item \textbf{Mobile App:} Make an Android or iPhone app version of ReviewGuard.
+  \item \textbf{Self-learning AI:} Let the AI automatically learn from new confirmed fake reviews without needing a full retraining session.
+  \item \textbf{Explain the Result:} Tell the user exactly which words in the review made the AI suspicious.
+\end{enumerate}
+
+\section{Conclusion}
+
+\textbf{ReviewGuard} is a complete and working AI-powered tool that helps online shoppers identify fake product reviews in real time. The Chrome extension is easy to install and use -- no technical knowledge is needed. The AI checks reviews automatically and shows clear green (Real) or red (Fake) badges directly on the shopping page.
+
+Our AI (SVM) correctly identifies \textbf{91.2\% of reviews} as Real or Fake, catching 93 out of every 100 fake reviews. It was tested by real users who found it helpful and easy to use.
+
+The whole system -- Chrome extension, AI server, and admin dashboard -- was built step by step using the Agile method. All parts were integrated and tested together, and it met all the speed, accuracy, and usability goals we set at the beginning.
+
+ReviewGuard shows that AI can be used to build practical tools that directly help everyday people make smarter decisions when shopping online.
+
+%==========================================================
+%  REFERENCES
+%==========================================================
+\newpage
+\begin{thebibliography}{99}
+
+\bibitem{mukherjee}
+Mukherjee, A., Liu, B., and Glance, N. (2012).
+\textit{Spotting Fake Reviewer Groups in Consumer Reviews.}
+International World Wide Web Conference (WWW 2012).
+
+\bibitem{ott}
+Ott, M., Choi, Y., Cardie, C., and Hancock, J. T. (2011).
+\textit{Finding Deceptive Opinion Spam by Any Stretch of the Imagination.}
+Association for Computational Linguistics (ACL 2011).
+
+\bibitem{sklearn}
+Pedregosa, F. et al. (2011).
+\textit{Scikit-learn: Machine Learning in Python.}
+Journal of Machine Learning Research, 12, pages 2825--2830.
+
+\bibitem{nltk}
+Bird, S., Klein, E., and Loper, E. (2009).
+\textit{Natural Language Processing with Python.}
+O'Reilly Media.
+
+\bibitem{flask}
+Grinberg, M. (2018).
+\textit{Flask Web Development (2nd edition).}
+O'Reilly Media.
+
+\bibitem{sommerville}
+Sommerville, I. (2015).
+\textit{Software Engineering, 10th Edition.}
+Pearson Education.
+
+\bibitem{chrome}
+Google Developers. (2023).
+\textit{Chrome Extensions -- Manifest V3 Guide.}
+Available at: https://developer.chrome.com/docs/extensions/mv3/
+
+\end{thebibliography}
+
+%==========================================================
+%  APPENDIX
+%==========================================================
+\appendix
+\chapter{Dataset Information}
+
+\begin{table}[H]
+\centering
+\caption{Fake Reviews Dataset -- Basic Information}
+\begin{tabular}{ll}
+\toprule
+\textbf{What} & \textbf{Value} \\
+\midrule
+Total Reviews & 40,427 \\
+Fake Reviews (label = 1) & 20,214 (exactly 50\%) \\
+Real Reviews (label = 0) & 20,213 (exactly 50\%) \\
+Columns & Category, Rating (1-5), Label, Review Text \\
+Product Types & Home and Kitchen, Electronics, Clothing, Books \\
+Rating Range & 1 star to 5 stars \\
+Average Review Length & About 78 words \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\imagebox{Histogram bar chart showing dataset balance: Two bars side by side, 'Fake Reviews' (label=1) showing 20,214 reviews and 'Real Reviews' (label=0) showing 20,213 reviews. Both bars are almost exactly the same height, showing the dataset is perfectly balanced. Bars colored red for Fake and green for Real.}{Fake Reviews Dataset -- Perfectly Balanced Distribution}
+
+\chapter{API Endpoint List}
+
+\begin{table}[H]
+\centering
+\caption{All API Endpoints -- What They Do}
+\begin{tabularx}{\textwidth}{lllX}
+\toprule
+\textbf{Method} & \textbf{URL} & \textbf{What It Does} & \textbf{Login Needed?} \\
+\midrule
+POST & /check-review & Check one review for Real/Fake & No \\
+POST & /check-reviews & Check many reviews at once & No \\
+GET  & /status & Check if server is running & No \\
+GET  & /admin & Open admin dashboard & Yes \\
+POST & /admin/retrain & Upload data and retrain AI & Yes \\
+GET  & /admin/download & Download flagged reviews as CSV & Yes \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\chapter{Word Meanings (Glossary)}
+
+\begin{description}[leftmargin=3cm]
+  \item[Fake Review] A review written by someone who did not actually buy or use the product. Often written to trick buyers.
+  \item[Real/Genuine Review] A review written by an actual buyer based on their true experience with the product.
+  \item[Chrome Extension] A small add-on program that you install inside the Google Chrome browser to add extra features.
+  \item[NLP] Natural Language Processing -- teaching a computer to read and understand human language (like English).
+  \item[TF-IDF] A math method that figures out which words in a review are important and converts them into numbers.
+  \item[Naive Bayes] A simple type of AI that uses probability to guess whether a review is real or fake.
+  \item[SVM] Support Vector Machine -- a smarter type of AI that finds the best dividing line between real and fake reviews.
+  \item[API] A way for two programs to talk to each other over the internet (like a phone call between programs).
+  \item[Flask] A Python tool used to build websites and servers easily.
+  \item[JSON] A simple way to send data between programs, using text that looks like: \{"key": "value"\}
+  \item[Database] A place where information is stored in an organized way so it can be found and used later.
+  \item[Training Data] Examples (like real and fake reviews) used to teach the AI.
+  \item[Accuracy] How many reviews the AI got right out of all reviews tested.
+  \item[F1 Score] A single number (0 to 1) that measures overall AI quality. Closer to 1 is better.
+  \item[Stemming] Reducing a word to its root form (e.g., running, runs, runner all become run).
+  \item[Stop Words] Very common words like "the", "is", "a" that are removed because they do not help identify fake reviews.
+  \item[ER Diagram] A picture showing how different data in the database is organized and connected.
+  \item[DFD] Data Flow Diagram -- a picture showing how data moves through a system.
+  \item[Use Case] A specific thing that a user can do with the system (like "check reviews" or "download report").
+  \item[Agile] A way of building software bit by bit with regular testing and feedback, instead of building everything at once.
+  \item[Sprint] A 2-week work period in Agile where the team builds and delivers one piece of the project.
+  \item[Bug] A mistake or error in the code that causes the software to work incorrectly.
+  \item[UAT] User Acceptance Testing -- letting real users try the software to see if it is easy and useful.
+\end{description}
+
+\end{document}

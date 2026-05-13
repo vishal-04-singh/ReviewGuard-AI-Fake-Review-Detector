@@ -160,7 +160,7 @@ def classify():
         if label == "Suspicious":
             confidence = min(confidence + flag_boost, 95)
 
-    logger.info("Classified: %s (%.1f%%) | flags: %s", label, confidence, ling["flags"])
+    logger.info("Classified: %s (%.1f%%) | flags: %s", label, confidence, ling["flags"]) # type: ignore
 
     return jsonify({
         "label":      label,
@@ -178,31 +178,31 @@ def classify_bulk():
         return jsonify({"error": "Provide 'reviews' array"}), 400
 
     reviews = data["reviews"]
-    if not isinstance(reviews, list) or len(reviews) > 100:
+    if not isinstance(reviews, list) or len(reviews) > 100: # type: ignore
         return jsonify({"error": "reviews must be an array of up to 100 items"}), 400
 
     if model is None:
         return jsonify({"error": "Model not loaded"}), 503
 
     results = []
-    for rev in reviews:
-        text   = str(rev.get("text", "")).strip()
-        rating = float(rev.get("rating", 0) or 0)
+    for rev in reviews: # type: ignore
+        text   = str(rev.get("text", "")).strip() # type: ignore
+        rating = float(rev.get("rating", 0) or 0) # type: ignore
         if not text:
-            results.append({"error": "empty"})
+            results.append({"error": "empty"}) # type: ignore
             continue
         try:
             proba      = model.predict_proba([text])[0]
             pred       = model.predict([text])[0]
             label      = "Suspicious" if pred == 1 else "Genuine"
             confidence = float(max(proba) * 100)
-            ling       = extract_linguistic_features(text, rating)
-            results.append({
+            ling       = extract_linguistic_features(text, rating) # type: ignore
+            results.append({ # type: ignore
                 "label": label, "confidence": round(confidence, 1),
                 "flags": ling["flags"], "method": "ml"
             })
         except Exception as e:
-            results.append({"error": str(e)})
+            results.append({"error": str(e)}) # type: ignore
 
     return jsonify({"results": results})
 
@@ -215,4 +215,5 @@ if __name__ == "__main__":
         train_and_save()
         load_model()
     print("\n🛡️  ReviewGuard API running on http://localhost:5000\n")
-    app.run(host="0.0.0.0", port=5001, debug=False)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port, debug=False)
